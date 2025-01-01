@@ -1,10 +1,12 @@
 package cifra_rabbit
 
 import (
+	"context"
+
 	"github.com/sirupsen/logrus"
 )
 
-func (b *Broker) Listen(log *logrus.Logger, queueName string, routingKey string, handler func([]byte) error) error {
+func (b *Broker) Listen(ctx context.Context, log *logrus.Logger, queueName string, routingKey string, handler func(context.Context, []byte) error) error {
 	_, err := b.channel.QueueDeclare(
 		queueName,
 		true,  // Durable
@@ -43,7 +45,7 @@ func (b *Broker) Listen(log *logrus.Logger, queueName string, routingKey string,
 
 	go func() {
 		for msg := range msgs {
-			if err := handler(msg.Body); err != nil {
+			if err := handler(ctx, msg.Body); err != nil {
 				log.Printf("Failed to handle message: %v", err)
 			} else {
 				err := msg.Ack(false)
