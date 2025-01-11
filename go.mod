@@ -1,4 +1,4 @@
-module github.com/cifra-city/cifra-rabbit
+module github.com/recovery-flow/cifra-rabbit
 
 go 1.23.1
 
